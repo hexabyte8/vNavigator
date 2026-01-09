@@ -1,6 +1,8 @@
 
 import Foundation
 import SwiftUI
+
+/// Main view for displaying and managing building folders
 @available(iOS 16.0, *)
 struct FolderListView: View {
     @State var folders: [Folder] = []
@@ -105,6 +107,7 @@ struct FolderListView: View {
         })
     }
     
+    /// Loads all folders from the documents directory
     func loadFolders() {
         do {
             let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
@@ -121,6 +124,7 @@ struct FolderListView: View {
         }
     }
     
+    /// Creates a new folder with the specified name
     func saveFolder() {
         do {
             let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
@@ -132,22 +136,35 @@ struct FolderListView: View {
         }
     }
     
+    /// Deletes a folder at the specified offset in the list
+    /// - Parameter offsets: Index set containing the position of the folder to delete
     func deleteFolder(at offsets: IndexSet) {
         let index = offsets[offsets.startIndex]
         let folderURL = folders[index]
-        try! FileManager.default.removeItem(at: folderURL.url)
-        folders.remove(atOffsets: offsets)
+        do {
+            try FileManager.default.removeItem(at: folderURL.url)
+            folders.remove(atOffsets: offsets)
+        } catch {
+            print("Error deleting folder: \(error.localizedDescription)")
+        }
     }
     
+    /// Renames a folder at the specified index
+    /// - Parameter index: The index of the folder to rename
     func renameFolder(at index: Int) {
         let folder = folders[index]
         let newURL = folder.url.deletingLastPathComponent().appendingPathComponent(newName)
-        try? FileManager.default.moveItem(at: folder.url, to: newURL)
-        folders[index].name = newName
-        loadFolders()
+        do {
+            try FileManager.default.moveItem(at: folder.url, to: newURL)
+            folders[index].name = newName
+            loadFolders()
+        } catch {
+            print("Error renaming folder: \(error.localizedDescription)")
+        }
     }
 }
 
+/// Represents a folder in the file system
 struct Folder: Identifiable, Equatable {
     let id = UUID()
     var name: String

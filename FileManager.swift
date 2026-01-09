@@ -2,6 +2,7 @@ import Foundation
 import SwiftUI
 
 
+/// View model for managing files within a folder
 @available(iOS 16.0, *)
 class FileManagerViewModel: ObservableObject {    
     var folderURL: URL
@@ -14,6 +15,7 @@ class FileManagerViewModel: ObservableObject {
     
     @Published var files: [URL] = []
     
+    /// Loads all files from the folder URL
     func loadFiles() {
         do {
             self.files = try FileManager.default.contentsOfDirectory(at: folderURL, includingPropertiesForKeys: nil, options: [])

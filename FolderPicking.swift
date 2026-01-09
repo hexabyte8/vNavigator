@@ -8,6 +8,7 @@
 import Foundation
 import SwiftUI
 
+/// UIViewControllerRepresentable wrapper for UIDocumentPickerViewController to select folders
 @available(iOS 16.0, *)
 struct FolderPicker: UIViewControllerRepresentable {
     
@@ -37,15 +38,16 @@ struct FolderPicker: UIViewControllerRepresentable {
         }
         
         func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
-            guard urls.first!.startAccessingSecurityScopedResource() else {
-                           // Handle the failure here.
-                           return
-                       }
-                       
-                       // Release the security-scoped resource when finished.
-            defer { urls.first!.stopAccessingSecurityScopedResource() }
-                       
             guard let pickedURL = urls.first else { return }
+            
+            guard pickedURL.startAccessingSecurityScopedResource() else {
+                print("Failed to access security-scoped resource")
+                return
+            }
+                       
+            // Release the security-scoped resource when finished.
+            defer { pickedURL.stopAccessingSecurityScopedResource() }
+                       
             do {
                 // Add the picked file to the folder's directory
                 let fileURL = parent.folderURL.appendingPathComponent(pickedURL.lastPathComponent)
@@ -53,7 +55,7 @@ struct FolderPicker: UIViewControllerRepresentable {
                 // Update the list of files in the view model
                 parent.fileManagerViewModel.loadFolders()
             } catch {
-                print("Error copying file: \(error.localizedDescription)")
+                print("Error copying folder: \(error.localizedDescription)")
             }
         }
     }
