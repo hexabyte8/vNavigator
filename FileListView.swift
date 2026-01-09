@@ -75,7 +75,7 @@ struct FileListView: View {
         
         
         .alert("Rename File", isPresented: $showRenameAlert, actions: {
-            TextField("New Name", text: $newName)
+            TextField("Enter new file name", text: $newName)
             Button("Cancel", action: {
                 newName = ""
             })
