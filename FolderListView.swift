@@ -139,7 +139,7 @@ struct FolderListView: View {
     /// Deletes a folder at the specified offset in the list
     /// - Parameter offsets: Index set containing the position of the folder to delete
     func deleteFolder(at offsets: IndexSet) {
-        let index = offsets[offsets.startIndex]
+        guard let index = offsets.first else { return }
         let folderURL = folders[index]
         do {
             try FileManager.default.removeItem(at: folderURL.url)
