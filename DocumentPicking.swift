@@ -8,6 +8,7 @@
 import Foundation
 import SwiftUI
 
+/// UIViewControllerRepresentable wrapper for UIDocumentPickerViewController to select PDF files
 @available(iOS 16.0, *)
 struct DocumentPicker: UIViewControllerRepresentable {
     
